@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/simple-statistics@7.8.2/dist/simple-statistics.min.js"></script>
+    <script src="{{url_for('static', filename='jquery.csv.js')}}"></script>
+    <title>Signal Viewer</title>
+    <style>
+     body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1{
+        display: flex;
+        justify-content: center;
+    }
+
+    h3{
+        display: flex;
+        justify-content: center;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 200px;
+    }
+    .column {
+        flex-basis: 48%;
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    input[type="file"] {
+        margin-bottom: 10px;
+    }
+    #plot1, #plot2 {
+        height: 300px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .btn-container button {
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 3px;
+        background-color: #007bff;
+        color: #fff;
+        margin-right: 10px;
+    }
+    input[type="color"] {
+        margin-bottom: 10px;
+    }
+    input[type="range"] {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    #label1, #label2 {
+        margin-bottom: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+    #link_lbl {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+    #link {
+        display: block;
+        margin: 0 auto;
+        transform: scale(2);
+    }
+
+    button {
+  background-color: blue;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  }
+
+    button:hover {
+    background-color: #007bff;
+    }
+
+    input[type="color"] {
+    height: 30px;
+    width: 30px;
+    border: none;
+    border-radius: 50%;
+    background-color: blue;
+    cursor: pointer;
+    }
+
+    input[type="color"]:hover {
+    background-color: #007bff;
+    }
+</style>
+        
+    </style>
+</head>
+<body>
+
+    <h1>Live Signal Viewer</h1>
+    <h3>By team 1</h3>
+
+    <div class="row">
+        <div class="column" id="channel1">
+            <label for="avatar">Choose a Signal file:</label>
+            <input type="file"
+                   id="sig1" name="signal1"
+                   accept=".xlsx, .xls, .csv">
+                   <br><br>
+                   <label for="Show/Hide" id="show_lbl1">Hide</label>
+                   <input type="checkbox" id="Show/Hide">
+            <div id="plot1"></div>
+            <br>
+            <button id="playBtn">Play</button>
+            <button id="pauseBtn">Pause</button>
+            <input type="color" id="color">
+            <div>
+                <label for="cinespeed" id="cinespeed_lbl">Cinespeed:</label>
+                <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
+            </div>
+            <label for="rewind" id="rewind_lbl1">Auto Rewind</label>
+            <input type="checkbox" id="rewind">
+            <button id="stats" onclick="pdf()">Download statistics file</button><br>
+            <input type="text" id ="label1" > 
+            <button type="button" id="lab" onclick="getlabel()">Get label</button>
+        </div>
+        <div class="column" id="channel2">
+            <label for="avatar2">Choose a Signal file:</label>
+            <input type="file"
+                   id="sig2" name="signal2"
+                   accept=".xlsx, .xls, .csv">
+                   <br><br>
+                   <label for="Show/Hide2" id="show_lbl2">Hide</label>
+                   <input type="checkbox" id="Show/Hide2">
+            <div id="plot2"></div>
+            <br>
+            <button id="playBtn2">Play</button>
+            <button id="pauseBtn2">Pause</button>
+            <input type="color" id="color2">
+            <div>
+                <label for="cinespeed2" id ="cinespeed_lbl2">Cinespeed:</label>
+                <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed2"></div>
+                <label for="rewind2" id="rewind_lbl2">Auto Rewind</label>
+                <input type="checkbox" id="rewind2">
+                <button id="stats2" onclick="pdf2()">Download statistics file</button><br>
+                <input type="text" id ="label2" > 
+            <button type="button" id="lab2" onclick="getlabel2()">Get label</button>
+            </div>
+    </div>
+    </div>
+
+    <label for="link" id="link_lbl">Link</label>
+    <input type="checkbox" id="link">
+    
+    <script>
+        const Time = [];
+        const Amplitude = [];
+        const Time2 = [];
+        const Amplitude2 = [];
+        
+
+        //playAnimation boolean to insure that play button functions when there is no animation
+        var playAnim = false;
+        var playAnim2 = false;
+    
+        const fileInput = document.getElementById('sig1');
+        const fileInput2 = document.getElementById('sig2');
+
+        //execute
+        fileInput.addEventListener('change', importSignal);
+        fileInput2.addEventListener('change', importSignal2);
+
+
+        var i = 0;
+        var j = 0;
+    
+        var interval;
+        var interval2;
+
+        
+        //define a boolean that changes if rewind is checked to execute it
+        var IsRewind = false;
+        const rewindBtn = document.getElementById('rewind');
+
+        rewindBtn.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+                IsRewind = true;
+            }
+            else
+            {
+                IsRewind = false;
+            }
+        })
+
+
+        //define a boolean that changes if rewind is checked to execute it for plot2
+        var IsRewind2 = false;
+        const rewindBtn2 = document.getElementById('rewind2');
+
+        rewindBtn.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+                IsRewind2 = true;
+            }
+            else
+            {
+                IsRewind2 = false;
+            }
+        })
+
+
+
+
+
+        //Add Empty plot on load, and hide buttons and sliders
+        const layout = { title: 'Please add your signal', yaxis: { title: 'y', fixedrange: true }, xaxis: { title: 'x', fixedrange: true, rangemode: 'tozero'}, width : 1500 }; // fixedrange -> No pan when there is no signal
+        const plotDiv = document.getElementById('plot1');
+        const config = {
+            displayModeBar: false, //disable plotlytool bar when there is no signal
+        }
+        Plotly.newPlot(plotDiv, [], layout, config);
+
+
+        //Hide buttons onload for plot1
+        document.getElementById('playBtn').style.display = 'none';
+        document.getElementById('pauseBtn').style.display = 'none';
+        document.getElementById('color').style.display = 'none';
+        document.getElementById('cinespeed_lbl').style.display = 'none';
+        document.getElementById('cinespeed').style.display = 'none';
+        document.getElementById('Show/Hide').style.display = 'none';
+        document.getElementById('rewind').style.display = 'none';
+        document.getElementById('rewind_lbl1').style.display = 'none';
+        document.getElementById('show_lbl1').style.display = 'none';
+        document.getElementById('stats').style.display = 'none';
+        document.getElementById('label1').style.display = 'none';
+        document.getElementById('lab').style.display = 'none';
+
+        //Hide buttons onload for plot2
+        document.getElementById('playBtn2').style.display = 'none';
+        document.getElementById('pauseBtn2').style.display = 'none';
+        document.getElementById('color2').style.display = 'none';
+        document.getElementById('cinespeed_lbl2').style.display = 'none';
+        document.getElementById('cinespeed2').style.display = 'none';
+        document.getElementById('Show/Hide2').style.display = 'none';
+        document.getElementById('rewind2').style.display = 'none';
+        document.getElementById('rewind_lbl2').style.display = 'none';
+        document.getElementById('show_lbl2').style.display = 'none';
+        document.getElementById('stats2').style.display = 'none';
+        document.getElementById('label2').style.display = 'none';
+        document.getElementById('lab2').style.display = 'none';
+
+        //trace1,trace2 global dec to edit it (show/hide)
+        const trace1 = { x: [], y: [], mode: 'lines', line: { color: 'blue' }, visible: true };
+        const trace2 = { x: [], y: [], mode: 'lines', line: { color: 'blue' }, visible: true };
+
+        const speedSlider = document.getElementById('cinespeed');
+        const speedSlider2 = document.getElementById('cinespeed2');
+        var cinespeed = speedSlider.defaultValue; //initial value for speed
+        var cinespeed2 = speedSlider2.defaultValue; //initial value for speed
+
+
+
+        const layout2 = { title: 'Please add your signal', yaxis: { title: 'y', fixedrange: true }, xaxis: { title: 'x', fixedrange: true, rangemode: 'tozero'}, width : 1500 }; // fixedrange -> No pan when there is no signal
+        const plotDiv2 = document.getElementById('plot2');
+        const config2 = {
+            displayModeBar: false, //disable plotlytool bar when there is no signal
+        }
+        Plotly.newPlot(plotDiv2, [], layout2, config2);
+
+
+
+
+        
+    
+        // ImportSignal function
+        function importSignal() {
+            // Get the selected file
+            const fileInput = document.getElementById('sig1');
+            const file = fileInput.files[0];
+    
+            // Create a new FileReader object
+            const reader = new FileReader();
+    
+            // Define a callback function to handle the file data
+            reader.onload = (event) => {
+                // Get the file data as a string
+                const fileData = event.target.result;
+    
+                // Split the string into lines
+                const lines = fileData.split(/\r?\n/);
+    
+                // Create arrays for each column
+              //  const Time = [];
+               // const Amplitude = [];
+    
+                // Loop through the lines and split each line into columns
+                for (let i = 0; i < lines.length; i++) {
+                    const columns = lines[i].split(',');
+    
+                    // Store the column values in their respective arrays
+                    Time.push(columns[0]);
+                    Amplitude.push(columns[1]);
+                }
+    
+                // Create a new plot using Plotly.js
+                const plotDiv = document.getElementById('plot1');
+                const layout = { title: 'Signal Viewer', yaxis: { title: 'Amplitude' }, xaxis: { title: 'x' },width : 1500 };
+                config_1 = { displayModeBar: true}
+                Plotly.newPlot(plotDiv, [trace1], layout, config_1);
+
+                
+                // Define the play button
+                const playBtn = document.getElementById('playBtn');
+                playBtn.style.display = 'inline';
+
+                document.getElementById('Show/Hide').style.display = 'inline';
+                document.getElementById('rewind').style.display = 'inline';
+                document.getElementById('rewind_lbl1').style.display = 'inline';
+                document.getElementById('show_lbl1').style.display = 'inline';
+                document.getElementById('stats').style.display = 'inline';
+                document.getElementById('label1').style.display = 'inline';
+                document.getElementById('lab').style.display = 'inline';
+
+
+                playBtn.addEventListener('click', function() {
+        
+
+                    //if playAnim is false then change to true and execute play
+                    if(!playAnim)
+                    {
+                        playAnim = true;
+                        interval = setInterval(() => {
+                        trace1.x.push(Time[i]);
+                        trace1.y.push(Amplitude[i]);
+                        Plotly.redraw(plotDiv);
+                        i++;
+                
+                        //if animation has ended reset i to 0 to start it again
+                        if (i >= Time.length) {
+                            clearInterval(interval);
+                            // Animation has ended, check if rewind button is checked reset the variables and replay the animation
+                            if(IsRewind)
+                            {
+                            i = 0;
+                            trace1.x = [];
+                            trace1.y = [];
+                            playAnim = false;
+                            Plotly.redraw(plotDiv);
+                            playBtn.click();
+                            }
+                        }
+
+                Plotly.relayout(plotDiv, { xaxis: { range: [Time[Math.max(0, i - 100)], Time[i]] }});
+                    }, cinespeed-50);
+
+                    if(linked) //play sig2
+                    {
+                        playBtn2.click();
+                    }
+
+                    }
+                });
+
+                
+    
+                // Define the pause button
+                const pauseBtn = document.getElementById('pauseBtn');
+                pauseBtn.style.display = 'inline';
+                pauseBtn.addEventListener('click', function() {
+                    if(playAnim)
+                    {
+                        playAnim = false;
+                        clearInterval(interval);
+
+                        if(linked)
+                        {
+                            playAnim2 = false;
+                            clearInterval(interval2);
+                        }
+                    }
+                    
+                });
+    
+                // Add event listener to the color picker
+                const colorInput = document.getElementById('color');
+                colorInput.style.display = 'inline';
+                colorInput.addEventListener('change', function() {
+                    const selectedColor = this.value;
+                    trace1.line.color = selectedColor;
+                    Plotly.redraw(plotDiv);
+                });
+
+                // Add event listener to the speed slider
+                document.getElementById('cinespeed_lbl').style.display = 'inline';
+                speedSlider.style.display = 'inline'; //show speedslider
+                speedSlider.addEventListener('input', function() {
+                    cinespeed = speedSlider.max - this.value;  //slider max value - new value to reverse
+                    if(playAnim) {
+                        clearInterval(interval);
+                        interval = setInterval(() => {
+                            trace1.x.push(Time[i]);
+                            trace1.y.push(Amplitude[i]);
+                            Plotly.redraw(plotDiv);
+                            i++;
+                            
+                            if (i >= Time.length) {
+                            clearInterval(interval);
+                        }
+
+                Plotly.relayout(plotDiv, { xaxis: { range: [Time[Math.max(0, i - 100)], Time[i]] }});
+                    }, cinespeed-50);
+
+                    }
+                    
+                    if (linked && event.target !== speedSlider2) {
+                        speedSlider2.value = this.value;
+                        speedSlider2.dispatchEvent(new Event('input'));
+            }
+                });
+
+                
+                
+    
+                // Trigger the click event of the play button to start the animation
+                playBtn.click();
+            };
+            
+    
+            // Read the file as text
+            reader.readAsText(file);
+        };
+        function pdf(){
+            var n = (Amplitude.length/100);
+            var sum = 0;
+            var sumSquared = 0;
+            var min = Number.MAX_VALUE;
+            var max = Number.MIN_VALUE;
+            for (var i = 0; i <= n; i++) {
+                var x = Amplitude[i];
+                sum = sum + x;
+                sumSquared += x*x;
+                if (x < min) {
+                    min = x;
+                }
+                if (x > max) {
+                    max = x;
+                }
+            }
+            var mean = sum / n;
+            var variance = sumSquared / n - mean*mean;
+            var stdDev = Math.sqrt(variance);
+            var duration = Time[Time.length-2];
+            
+        var element = document.getElementById('plot1');
+        var opt = {
+            margin: 1,
+            filename: 'signal_1.pdf',
+            image: { type: 'pdf', quality: 0.95 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        
+        var html = '<h2> Signal Analytics</h2>' // Add title to the plot in the PDF
+        //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
+        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+        html2pdf().set(opt).from(html).save();
+           
+            }
+            function getlabel(){
+                var label = document.getElementById('label1').value;
+                var update = {
+                    annotations: [
+                        {
+                            text: label,
+                            xref: 'paper',
+                            yref: 'paper',
+                            x: 1.0,
+                            y: 1.0,
+                            showarrow: false,
+                            font: {
+                                size: 16
+                            }
+                        }
+                    ]
+                };
+                Plotly.update(plotDiv, {}, update);
+    }/////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        function importSignal2() {
+            // Get the selected file
+            const fileInput2 = document.getElementById('sig2');
+            const file2 = fileInput2.files[0];
+    
+            // Create a new FileReader object
+            const reader2 = new FileReader();
+    
+            // Define a callback function to handle the file data
+            reader2.onload = (event) => {
+                // Get the file data as a string
+                const fileData2 = event.target.result;
+    
+                // Split the string into lines
+                const lines2 = fileData2.split(/\r?\n/);
+    
+                // Create arrays for each column
+                //const Time2 = [];
+                //const Amplitude2 = [];
+    
+                // Loop through the lines and split each line into columns
+                for (let i = 0; i < lines2.length; i++) {
+                    const columns2 = lines2[i].split(',');
+    
+                    // Store the column values in their respective arrays
+                    Time2.push(columns2[0]);
+                    Amplitude2.push(columns2[1]);
+                }
+    
+                // Create a new plot using Plotly.js
+                const plotDiv2 = document.getElementById('plot2');
+                const layout2 = { title: 'Signal Viewer', xaxis: { title: 'Time' }, yaxis: { title: 'Amplitude' },width : 1500 };
+                config_2 = { displayModeBar: true};
+                Plotly.newPlot(plotDiv2, [trace2], layout2, config_2);
+                
+                // Define the play button
+                const playBtn2 = document.getElementById('playBtn2');
+                playBtn2.style.display = 'inline';
+
+                
+                document.getElementById('Show/Hide2').style.display = 'inline';
+                document.getElementById('rewind2').style.display = 'inline';
+                document.getElementById('rewind_lbl2').style.display = 'inline';
+                document.getElementById('show_lbl2').style.display = 'inline';
+                document.getElementById('stats2').style.display = 'inline';
+                document.getElementById('label2').style.display = 'inline';
+                document.getElementById('lab2').style.display = 'inline';
+
+                playBtn2.addEventListener('click', function() {
+                
+        
+
+                    //if playAnim is false then change to true and execute play
+                    if(!playAnim2)
+                    {
+                        playAnim2 = true;
+                        interval2 = setInterval(() => {
+                        trace2.x.push(Time2[j]);
+                        trace2.y.push(Amplitude2[j]);
+                        Plotly.redraw(plotDiv2);
+                        j++;
+                
+
+                        if (j >= Time2.length) {
+                            clearInterval(interval2);
+
+                            // Animation has ended, check if rewind button is checked reset the variables and replay the animation
+                            if(IsRewind)
+                            {
+                            j = 0;
+                            trace1.x = [];
+                            trace1.y = [];
+                            playAnim = false;
+                            playBtn.click();
+                            }
+                        }
+
+                Plotly.relayout(plotDiv2, { xaxis: { range: [Time2[Math.max(0, j - 100)], Time2[j]] }});
+                    }, cinespeed2-50);
+
+                    
+                    if(linked) //play sig2
+                    {
+                        playBtn.click();
+                    }
+
+                    }
+                });
+
+                
+    
+                // Define the pause button
+                const pauseBtn2 = document.getElementById('pauseBtn2');
+                pauseBtn2.style.display = 'inline';
+                pauseBtn2.addEventListener('click', function() {
+                    if(playAnim2)
+                    {
+                        playAnim2 = false;
+                        clearInterval(interval2);
+
+                        if(linked)
+                        {
+                            playAnim = false;
+                            clearInterval(interval);
+                        }
+                    }
+                    
+                });
+    
+                // Add event listener to the color picker
+                const colorInput2 = document.getElementById('color2');
+                colorInput2.style.display = 'inline';
+                colorInput2.addEventListener('change', function() {
+                    const selectedColor2 = this.value;
+                    trace2.line.color = selectedColor2;
+                    Plotly.redraw(plotDiv2);
+                });
+
+                // Add event listener to the speed slider
+                document.getElementById('cinespeed_lbl2').style.display = 'inline';
+                speedSlider2.style.display = 'inline';
+
+                speedSlider2.addEventListener('input', function() {
+                    cinespeed2 = speedSlider2.max - this.value;  //slider max value - new value to reverse
+                    if(playAnim2) {
+                        clearInterval(interval2);
+                        interval2 = setInterval(() => {
+                            trace2.x.push(Time2[j]);
+                            trace2.y.push(Amplitude2[j]);
+                            Plotly.redraw(plotDiv2);
+                            j++;
+                            
+                            if (j >= Time2.length) {
+                            clearInterval(interval2);
+                        }
+-
+                Plotly.relayout(plotDiv2, { xaxis: { range: [Time2[Math.max(0, j - 100)], Time2[j]] }});
+                    }, cinespeed2-50);
+
+                    }
+
+                    if (linked && event.target !== speedSlider) {
+                        speedSlider.value = this.value;
+                        speedSlider.dispatchEvent(new Event('input'));
+                    }
+                });
+
+                
+                
+    
+                // Trigger the click event of the play button to start the animation
+                playBtn2.click();
+            };
+            
+    
+            // Read the file as text
+            reader2.readAsText(file2);
+        };
+
+
+        //Show/Hide for plot1
+        const checkbox1 = document.getElementById('Show/Hide');
+
+        checkbox1.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+                trace1.visible = false;
+                Plotly.redraw(plotDiv);
+            } else
+            {
+                trace1.visible = true;
+                Plotly.redraw(plotDiv);
+            }
+        })
+
+
+        //show/Hide for plot2
+        const checkbox2 = document.getElementById('Show/Hide2');
+
+        checkbox2.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+                trace2.visible = false;
+                Plotly.redraw(plotDiv2); //redraw to hide even if paused
+            } else
+            {
+                trace2.visible = true;
+                Plotly.redraw(plotDiv2);
+            }
+        })
+        function pdf2(){
+            var n = (Amplitude2.length/100);
+            var sum = 0;
+            var sumSquared = 0;
+            var min = Number.MAX_VALUE;
+            var max = Number.MIN_VALUE;
+            for (var i = 0; i <= n; i++) {
+                var x = Amplitude2[i];
+                sum = sum + x;
+                sumSquared += x*x;
+                if (x < min) {
+                    min = x;
+                }
+                if (x > max) {
+                    max = x;
+                }
+            }
+            var mean = sum / n;
+            var variance = sumSquared / n - mean*mean;
+            var stdDev = Math.sqrt(variance);
+            var duration = Time2[Time2.length-2];
+            //return {min: min, max: max, mean: mean, stdDev: stdDev};
+        var element = document.getElementById('plot1');
+        var opt = {
+            margin: 1,
+            filename: 'signal_2.pdf',
+            image: { type: 'pdf', quality: 0.95 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        
+        var html = '<h2> Signal Analytics</h2>' // Add title to the plot in the PDF
+        //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
+        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+        html2pdf().set(opt).from(html).save();
+           
+            }
+            function getlabel2(){
+                var label = document.getElementById('label2').value;
+                var update = {
+                    annotations: [
+                        {
+                            text: label,
+                            xref: 'paper',
+                            yref: 'paper',
+                            x: 1.0,
+                            y: 1.0,
+                            showarrow: false,
+                            font: {
+                                size: 16
+                            }
+                        }
+                    ]
+                };
+                Plotly.update(plotDiv2, {}, update);
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //Link function
+        const link = document.getElementById('link');
+        var linked = false;
+
+        link.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+                linked = true;
+                playAnim = true;
+                i = 0;
+                trace1.x =[];
+                trace1.y =[];
+               
+                speedSlider.value = speedSlider.defaultValue; //returns to its deafult value
+                cinespeed = speedSlider2.defaultValue;
+
+                Plotly.redraw(plotDiv);
+                playBtn.click(); // restart the animation
+
+                
+                playAnim2 = true;
+                j = 0;
+                trace2.x =[];
+                trace2.y =[];
+         
+                speedSlider2.value = speedSlider2.defaultValue; //returns to its deafult value
+                cinespeed2 = cinespeed
+
+                Plotly.redraw(plotDiv2);
+                playBtn2.click(); // restart the animation
+
+                
+
+        //define a flag to avoid infinite loop
+        let isRelayouting = false;
+
+                
+                
+        // Link plot1 to plot2
+        plotDiv.on('plotly_relayout', function(eventData) {
+            if (linked && !isRelayouting) {
+                isRelayouting = true;
+                Plotly.relayout(plotDiv2, eventData)
+                .then(() => {
+                    isRelayouting = false;
+                });
+            }
+        });
+
+        // Link plot2 to plot1
+        plotDiv2.on('plotly_relayout', function(eventData) {
+            if (linked && !isRelayouting) {
+                isRelayouting = true;
+                Plotly.relayout(plotDiv, eventData)
+                .then(() => {
+                    isRelayouting = false;
+                });
+            }
+        });       
+
+        
+
+            }
+            else
+            {
+                linked = false;
+            }
+        });
+
+        // if (linked) {
+        // plotDiv1.on('plotly_relayout', function(eventData) {
+        //     Plotly.relayout(plotDiv2, eventData);
+        // });
+
+        // plotDiv2.on('plotly_relayout', function(eventData) {
+        //     Plotly.relayout(plotDiv1, eventData);
+        // });
+    //}
+
+        
+
+
+
+    </script>
+</body>
+</html>

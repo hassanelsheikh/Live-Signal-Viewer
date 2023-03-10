@@ -728,7 +728,7 @@
         //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
         html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
         html2pdf().set(opt).from(html).save();
-           
+           //
             }
             function getlabel2(){
                 var label = document.getElementById('label2').value;

@@ -471,7 +471,7 @@
             var stdDev = Math.sqrt(variance);
             var duration = Time[Time.length-2];}
             if(Amplitude2.length){
-                var n2 = (Amplitude2.length);
+            var n2 = (Amplitude2.length);
             var sum2 = 0;
             var sumSquared2 = 0;
             var min2 = Number.MAX_VALUE;
@@ -492,11 +492,10 @@
             var stdDev2 = Math.sqrt(variance2);
             var duration2 = Time2[Time2.length-2];
             }
-           // console.log(Amplitude);
         
         var opt = {
             margin: 1,
-            filename: 'signal_1.pdf',
+            filename: 'signal.pdf',
             image: { type: 'pdf', quality: 0.95 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }

@@ -306,9 +306,11 @@
                 // Split the string into lines
                 const lines = fileData.split(/\r?\n/);
     
-                // Create arrays for each column
-              //  const Time = [];
-               // const Amplitude = [];
+                // Clear the existing data
+                Time.length = 0;
+                Amplitude.length = 0;
+                trace1.x.length = 0;
+                trace1.y.length = 0;
     
                 // Loop through the lines and split each line into columns
                 for (let i = 0; i < lines.length; i++) {
@@ -321,7 +323,7 @@
     
                 // Create a new plot using Plotly.js
                 const plotDiv = document.getElementById('plot1');
-                const layout = { title: 'Signal Viewer', yaxis: { title: 'Amplitude' }, xaxis: { title: 'x' },width : 1500 };
+                const layout = { title: 'Channel 1', yaxis: { title: 'Amplitude' }, xaxis: { title: 'x' },width : 1500 };
                 config_1 = { displayModeBar: true}
                 Plotly.newPlot(plotDiv, [trace1], layout, config_1);
 
@@ -432,7 +434,7 @@
                     if (linked && event.target !== speedSlider2) {
                         speedSlider2.value = this.value;
                         speedSlider2.dispatchEvent(new Event('input'));
-            }
+                    }
                 });
 
                 
@@ -447,13 +449,14 @@
             reader.readAsText(file);
         };
         function pdf(){
-            var n = (Amplitude.length/100);
+            if (Amplitude.length){
+            var n = (Amplitude.length);
             var sum = 0;
             var sumSquared = 0;
             var min = Number.MAX_VALUE;
             var max = Number.MIN_VALUE;
             for (var i = 0; i <= n; i++) {
-                var x = Amplitude[i];
+                var x = parseFloat(Amplitude[i]);
                 sum = sum + x;
                 sumSquared += x*x;
                 if (x < min) {
@@ -466,9 +469,31 @@
             var mean = sum / n;
             var variance = sumSquared / n - mean*mean;
             var stdDev = Math.sqrt(variance);
-            var duration = Time[Time.length-2];
-            
-        var element = document.getElementById('plot1');
+            var duration = Time[Time.length-2];}
+            if(Amplitude2.length){
+                var n2 = (Amplitude2.length);
+            var sum2 = 0;
+            var sumSquared2 = 0;
+            var min2 = Number.MAX_VALUE;
+            var max2 = Number.MIN_VALUE;
+            for (var i = 0; i <= n; i++) {
+                var x = parseFloat(Amplitude2[i]);
+                sum2 = sum2 + x;
+                sumSquared2 += x*x;
+                if (x < min2) {
+                    min2 = x;
+                }
+                if (x > max2) {
+                    max2 = x;
+                }
+            }
+            var mean2 = sum2 / n2;
+            var variance2 = sumSquared2 / n2 - mean2*mean2;
+            var stdDev2 = Math.sqrt(variance2);
+            var duration2 = Time2[Time2.length-2];
+            }
+           // console.log(Amplitude);
+        
         var opt = {
             margin: 1,
             filename: 'signal_1.pdf',
@@ -476,10 +501,16 @@
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
-        
-        var html = '<h2> Signal Analytics</h2>' // Add title to the plot in the PDF
+        if (!Amplitude.length){
+            min=0;max=0;mean=0;stdDev=0;duration=0;
+        }
+        if (!Amplitude2.length){
+            min2=0;max2=0;mean2=0;stdDev2=0;duration2=0;
+        }
+        var html = '<h2> Signals Analytics</h2>' // Add title to the plot in the PDF
         //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
-        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+sum/n+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min2+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max2+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean2+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev2+'</td></tr><tr><td>Signal duration</td><td>'+duration2+'</td></tr></table>';
         html2pdf().set(opt).from(html).save();
            
             }
@@ -520,10 +551,13 @@
     
                 // Split the string into lines
                 const lines2 = fileData2.split(/\r?\n/);
-    
-                // Create arrays for each column
-                //const Time2 = [];
-                //const Amplitude2 = [];
+
+
+                //clear previous data if a new signal is added
+                Time2.length = 0;
+                Amplitude2.length = 0;
+                trace2.x.length = 0;
+                trace2.y.length = 0;
     
                 // Loop through the lines and split each line into columns
                 for (let i = 0; i < lines2.length; i++) {
@@ -536,7 +570,7 @@
     
                 // Create a new plot using Plotly.js
                 const plotDiv2 = document.getElementById('plot2');
-                const layout2 = { title: 'Signal Viewer', xaxis: { title: 'Time' }, yaxis: { title: 'Amplitude' },width : 1500 };
+                const layout2 = { title: 'Channel 2', xaxis: { title: 'Time' }, yaxis: { title: 'Amplitude' },width : 1500 };
                 config_2 = { displayModeBar: true};
                 Plotly.newPlot(plotDiv2, [trace2], layout2, config_2);
                 
@@ -694,40 +728,70 @@
             }
         })
         function pdf2(){
-            var n = (Amplitude2.length/100);
-            var sum = 0;
-            var sumSquared = 0;
-            var min = Number.MAX_VALUE;
-            var max = Number.MIN_VALUE;
-            for (var i = 0; i <= n; i++) {
-                var x = Amplitude2[i];
-                sum = sum + x;
-                sumSquared += x*x;
-                if (x < min) {
-                    min = x;
+            if (Amplitude.length){
+                var n = (Amplitude.length/100);
+                var sum = 0;
+                var sumSquared = 0;
+                var min = Number.MAX_VALUE;
+                var max = Number.MIN_VALUE;
+                for (var i = 0; i <= n; i++) {
+                    var x = parseFloat(Amplitude[i]);
+                    sum = sum + x;
+                    sumSquared += x*x;
+                    if (x < min) {
+                        min = x;
+                    }
+                    if (x > max) {
+                        max = x;
+                    }
                 }
-                if (x > max) {
-                    max = x;
+                var mean = sum / n;
+                var variance = sumSquared / n - mean*mean;
+                var stdDev = Math.sqrt(variance);
+                var duration = Time[Time.length-2];}
+                if(Amplitude2.length){
+                    var n2 = (Amplitude2.length/100);
+                var sum2 = 0;
+                var sumSquared2 = 0;
+                var min2 = Number.MAX_VALUE;
+                var max2 = Number.MIN_VALUE;
+                for (var i = 0; i <= n2; i++) {
+                    var x = parseFloat(Amplitude2[i]);
+                    sum2 = sum2 + x;
+                    sumSquared2 += x*x;
+                    if (x < min2) {
+                        min2 = x;
+                    }
+                    if (x > max2) {
+                        max2 = x;
+                    }
                 }
+                var mean2 = sum2 / n2;
+                var variance2 = sumSquared2 / n2 - mean2*mean2;
+                var stdDev2 = Math.sqrt(variance2);
+                var duration2 = Time2[Time2.length-2];
+                }
+               // console.log(Amplitude);
+            
+            var opt = {
+                margin: 1,
+                filename: 'signal_1.pdf',
+                image: { type: 'pdf', quality: 0.95 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            if (!Amplitude.length){
+                min=0;max=0;mean=0;stdDev=0;duration=0;
             }
-            var mean = sum / n;
-            var variance = sumSquared / n - mean*mean;
-            var stdDev = Math.sqrt(variance);
-            var duration = Time2[Time2.length-2];
-            //return {min: min, max: max, mean: mean, stdDev: stdDev};
-        var element = document.getElementById('plot1');
-        var opt = {
-            margin: 1,
-            filename: 'signal_2.pdf',
-            image: { type: 'pdf', quality: 0.95 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-        
-        var html = '<h2> Signal Analytics</h2>' // Add title to the plot in the PDF
-        //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
-        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
-        html2pdf().set(opt).from(html).save();
+            if (!Amplitude2.length){
+                min2=0;max2=0;mean2=0;stdDev2=0;duration2=0;
+            }
+            var html = '<h2> Signals Analytics</h2>' // Add title to the plot in the PDF
+            //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
+            html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+sum/n+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+            html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min2+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max2+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean2+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev2+'</td></tr><tr><td>Signal duration</td><td>'+duration2+'</td></tr></table>';
+            html2pdf().set(opt).from(html).save();
+               
            
             }
             function getlabel2(){

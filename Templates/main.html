@@ -306,7 +306,7 @@
                 // Split the string into lines
                 const lines = fileData.split(/\r?\n/);
     
-                // Clear the existing data
+                // Clear the existing data, to reset if added new file
                 Time.length = 0;
                 Amplitude.length = 0;
                 trace1.x.length = 0;
@@ -455,7 +455,7 @@
             var sumSquared = 0;
             var min = Number.MAX_VALUE;
             var max = Number.MIN_VALUE;
-            for (var i = 0; i <= n; i++) {
+            for (let i = 0; i <= n; i++) {
                 var x = parseFloat(Amplitude[i]);
                 sum = sum + x;
                 sumSquared += x*x;
@@ -507,10 +507,12 @@
             min2=0;max2=0;mean2=0;stdDev2=0;duration2=0;
         }
         var html = '<h2> Signals Analytics</h2>' // Add title to the plot in the PDF
+         html += '<h2>Plotted Signal</h2>' + plotDiv.innerHTML; 
         //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
         html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+sum/n+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+        html += '<h2>Plotted Signal</h2>' + plotDiv2.innerHTML;
         html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min2+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max2+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean2+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev2+'</td></tr><tr><td>Signal duration</td><td>'+duration2+'</td></tr></table>';
-        html2pdf().set(opt).from(html).save();
+            html2pdf().set(opt).from(html).save();
            
             }
             function getlabel(){
@@ -786,9 +788,11 @@
                 min2=0;max2=0;mean2=0;stdDev2=0;duration2=0;
             }
             var html = '<h2> Signals Analytics</h2>' // Add title to the plot in the PDF
-            //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
-            html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+sum/n+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
-            html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min2+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max2+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean2+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev2+'</td></tr><tr><td>Signal duration</td><td>'+duration2+'</td></tr></table>';
+         html += '<h2>Plotted Signal</h2>' + plotDiv.innerHTML; 
+        //html += '<h3>Statistics</h3><ul><li>Minimum Amplitude: ' + min + '</li><li>Maximum Amplitude: ' + max + '</li><li>Mean Amplitude: ' + mean + '</li><li>Standard Deviation: ' + stdDev + '</li></ul>'; // Add statistics to the PDF
+        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max+'</td><td></tr><tr><td>Mean amplitude</td><td>'+sum/n+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev+'</td></tr><tr><td>Signal duration</td><td>'+duration+'</td></tr></table>';
+        html += '<h2>Plotted Signal</h2>' + plotDiv2.innerHTML;
+        html +='<table><tr><th>Stat</th><th>result</th></tr><tr><td>Minimum Amplitude</td><td>'+min2+'</td></tr><tr><td>Maximum Amplitude</td><td>'+max2+'</td><td></tr><tr><td>Mean amplitude</td><td>'+mean2+'</td></tr><tr><td>Standard deviation</td><td>'+stdDev2+'</td></tr><tr><td>Signal duration</td><td>'+duration2+'</td></tr></table>';
             html2pdf().set(opt).from(html).save();
                
            

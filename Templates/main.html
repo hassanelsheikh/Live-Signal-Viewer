@@ -16,6 +16,7 @@
     h1{
         display: flex;
         justify-content: center;
+        font-size: 50px;
     }
 
     h3{
@@ -41,9 +42,18 @@
         margin-bottom: 10px;
     }
     #plot1, #plot2 {
-        height: 300px;
+        height: 500px;
         border: 1px solid #ccc;
         margin-bottom: 10px;
+        box-shadow: black 0px 0px 3px;
+        width: 1500px;
+    }
+
+    .box1{
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 1500px;
+        box-shadow: black 0px 0px 3px;
     }
     .btn-container {
         display: flex;
@@ -83,6 +93,7 @@
         margin: 0 auto;
         transform: scale(2);
     }
+    
 
     button {
   background-color: blue;
@@ -92,6 +103,7 @@
   border-radius: 4px;
   cursor: pointer;
   }
+  
 
     button:hover {
     background-color: #007bff;
@@ -109,9 +121,12 @@
     input[type="color"]:hover {
     background-color: #007bff;
     }
+
+    .input-box{
+        width:200px;
+    }
 </style>
-        
-    </style>
+
 </head>
 <body>
 
@@ -132,15 +147,16 @@
             <button id="playBtn">Play</button>
             <button id="pauseBtn">Pause</button>
             <input type="color" id="color">
-            <div>
+            <div class="box1">
                 <label for="cinespeed" id="cinespeed_lbl">Cinespeed:</label>
                 <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
+                <label for="rewind" id="rewind_lbl1">Auto Rewind</label>
+                <input type="checkbox" id="rewind"><br><br>
+                <button id="stats" onclick="pdf()">Download statistics file</button><br><br>
+                <div class="input-box"><input type="text" id ="label1" > </div>
+                <button type="button" id="lab" onclick="getlabel()">Add label</button>
             </div>
-            <label for="rewind" id="rewind_lbl1">Auto Rewind</label>
-            <input type="checkbox" id="rewind">
-            <button id="stats" onclick="pdf()">Download statistics file</button><br>
-            <input type="text" id ="label1" > 
-            <button type="button" id="lab" onclick="getlabel()">Add label</button>
+           
         </div>
         <div class="column" id="channel2">
             <label for="avatar2">Choose a Signal file:</label>
@@ -155,14 +171,16 @@
             <button id="playBtn2">Play</button>
             <button id="pauseBtn2">Pause</button>
             <input type="color" id="color2">
-            <div>
+            <div class="box1">
                 <label for="cinespeed2" id ="cinespeed_lbl2">Cinespeed:</label>
-                <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed2"></div>
+                <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed2">
                 <label for="rewind2" id="rewind_lbl2">Auto Rewind</label>
-                <input type="checkbox" id="rewind2">
-                <button id="stats2" onclick="pdf2()">Download statistics file</button><br>
-                <input type="text" id ="label2" > 
-            <button type="button" id="lab2" onclick="getlabel2()">Add label</button>
+                <input type="checkbox" id="rewind2"><br><br>
+                <button id="stats2" onclick="pdf2()">Download statistics file</button><br><br>
+                <div class="input-box"> <input type="text" id ="label2" > </div>
+                <button type="button" id="lab2" onclick="getlabel2()">Add label</button>
+            </div>
+                
             </div>
     </div>
     </div>

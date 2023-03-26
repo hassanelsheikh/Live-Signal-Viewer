@@ -1,16 +1,18 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 h1{
     display: flex;
     justify-content: center;
+    color: #007bff;
     font-size: 50px;
 }
 
 h3{
     display: flex;
     justify-content: center;
+    color: #007bff;
 }
 
 .row {
@@ -45,7 +47,8 @@ input[type="file"] {
   margin-bottom: 10px;
   box-shadow: black 0px 0px 3px;
   width: 700px;
-  margin: 100px;
+  margin-left: 100px;
+  margin-right: 100px;
   margin-bottom: 10px;
 }
 
@@ -56,6 +59,8 @@ input[type="file"] {
     box-shadow: black 0px 0px 3px;
     margin-top: 10px;
     margin-left: 100px;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .btn-container {
@@ -102,7 +107,7 @@ input[type="range"] {
 }
 
 button {
-background-color: blue;
+background-color: #007bff;
 color: white;
 padding: 10px 20px;
 border: none;
@@ -112,7 +117,7 @@ cursor: pointer;
 
 
 button:hover {
-background-color: #007bff;
+background-color: #0056b3;
 }
 
 input[type="color"] {
@@ -120,12 +125,12 @@ height: 30px;
 width: 30px;
 border: none;
 border-radius: 50%;
-background-color: blue;
+background-color: #007bff;
 cursor: pointer;
 }
 
 input[type="color"]:hover {
-background-color: #007bff;
+background-color: #0056b3;
 }
 
 .input-box{
@@ -136,6 +141,26 @@ background-color: #007bff;
     display: block;
     margin-left: 100px;
 }
+
+#sig1, #sig2{
+    /* hide the input box */
+    display: none;
+  }
+
+
+  .file-upload-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    width: 200px;
+  }
+  
+  .file-upload-button:hover {
+    background-color: #0056b3;
+  }
 
 @media screen and (max-width: 768px) {
     h1 {
@@ -165,4 +190,6 @@ background-color: #007bff;
     .plot-container {
         flex-direction: column;
     }
+
+
 }

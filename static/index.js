@@ -57,7 +57,7 @@ rewindBtn.addEventListener('change', (event) => {
 
 
 //Add Empty plot on load, and hide buttons and sliders
-const layout = { title: 'Please add your signal', yaxis: { title: 'y', fixedrange: true }, xaxis: { title: 'x', fixedrange: true, rangemode: 'tozero'}, width : 1500 }; // fixedrange -> No pan when there is no signal
+const layout = { title: 'Please add your signal', yaxis: { title: 'y', fixedrange: true }, xaxis: { title: 'x', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv = document.getElementById('plot1');
 const config = {
     displayModeBar: false, //disable plotlytool bar when there is no signal
@@ -104,7 +104,7 @@ var cinespeed2 = speedSlider2.defaultValue; //initial value for speed
 
 
 
-const layout2 = { title: 'Please add your signal', yaxis: { title: 'y', fixedrange: true }, xaxis: { title: 'x', fixedrange: true, rangemode: 'tozero'}, width : 1500 }; // fixedrange -> No pan when there is no signal
+const layout2 = { title: 'Please add your signal', yaxis: { title: 'y', fixedrange: true }, xaxis: { title: 'x', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv2 = document.getElementById('plot2');
 const config2 = {
     displayModeBar: false, //disable plotlytool bar when there is no signal
@@ -150,7 +150,7 @@ function importSignal() {
 
         // Create a new plot using Plotly.js
         const plotDiv = document.getElementById('plot1');
-        const layout = { title: 'Channel 1', yaxis: { title: 'Amplitude' }, xaxis: { title: 'x' },width : 1500 };
+        const layout = { title: 'Channel 1', yaxis: { title: 'Amplitude' }, xaxis: { title: 'x' },width : 700 };
         config_1 = { displayModeBar: true}
         Plotly.newPlot(plotDiv, [trace1], layout, config_1);
 
@@ -398,7 +398,7 @@ function importSignal2() {
 
         // Create a new plot using Plotly.js
         const plotDiv2 = document.getElementById('plot2');
-        const layout2 = { title: 'Channel 2', xaxis: { title: 'Time' }, yaxis: { title: 'Amplitude' },width : 1500 };
+        const layout2 = { title: 'Channel 2', xaxis: { title: 'Time' }, yaxis: { title: 'Amplitude' },width : 700 };
         config_2 = { displayModeBar: true};
         Plotly.newPlot(plotDiv2, [trace2], layout2, config_2);
         

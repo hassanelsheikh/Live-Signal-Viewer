@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../static/style.css">
     
     <title>Signal Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
 <body>
@@ -18,7 +19,9 @@
     <h3>By team 1</h3>
 
     <div class="row">
+        <div class="plot-container">
         <div class="column" id="channel1">
+            <div class="upload">
             <label for="avatar">Choose a Signal file:</label>
             <input type="file"
                    id="sig1" name="signal1"
@@ -26,11 +29,15 @@
                    <br><br>
                    <label for="Show/Hide" id="show_lbl1">Hide</label>
                    <input type="checkbox" id="Show/Hide">
+            </div>
             <div id="plot1"></div>
             <br>
-            <button id="playBtn">Play</button>
-            <button id="pauseBtn">Pause</button>
-            <input type="color" id="color">
+            <div class="controls">
+                <button id="playBtn">Play</button>
+                <button id="pauseBtn">Pause</button>
+                <input type="color" id="color">
+            </div>
+           
             <div class="box1">
                 <label for="cinespeed" id="cinespeed_lbl">Cinespeed:</label>
                 <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
@@ -43,18 +50,21 @@
            
         </div>
         <div class="column" id="channel2">
-            <label for="avatar2">Choose a Signal file:</label>
-            <input type="file"
-                   id="sig2" name="signal2"
-                   accept=".xlsx, .xls, .csv">
-                   <br><br>
-                   <label for="Show/Hide2" id="show_lbl2">Hide</label>
-                   <input type="checkbox" id="Show/Hide2">
+            <div class="upload">
+                <label for="avatar2">Choose a Signal file:</label>
+                <input type="file"
+                       id="sig2" name="signal2"
+                       accept=".xlsx, .xls, .csv">
+                       <br><br>
+                       <label for="Show/Hide2" id="show_lbl2">Hide</label>
+                       <input type="checkbox" id="Show/Hide2">
+            </div>
             <div id="plot2"></div>
             <br>
-            <button id="playBtn2">Play</button>
-            <button id="pauseBtn2">Pause</button>
-            <input type="color" id="color2">
+            <div class="controls"><button id="playBtn2">Play</button>
+                <button id="pauseBtn2">Pause</button>
+                <input type="color" id="color2">
+            </div>
             <div class="box1">
                 <label for="cinespeed2" id ="cinespeed_lbl2">Cinespeed:</label>
                 <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed2">
@@ -66,6 +76,7 @@
             </div>
                 
             </div>
+    </div>
     </div>
     </div>
 

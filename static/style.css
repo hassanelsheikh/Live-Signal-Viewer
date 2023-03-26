@@ -15,13 +15,12 @@ h3{
 
 .row {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 200px;
+    justify-content: center;
+    align-items: center;
 }
 .column {
-    flex-basis: 48%;
-    margin-bottom: 20px;
+    flex: 50%;
+    padding: 5px;
 }
 label {
     display: block;
@@ -30,20 +29,35 @@ label {
 input[type="file"] {
     margin-bottom: 10px;
 }
+#channel1 {
+    border-right: solid 1px black;
+}
+
+.plot-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
 #plot1, #plot2 {
-    height: 500px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    box-shadow: black 0px 0px 3px;
-    width: 1500px;
+  height: 500px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  box-shadow: black 0px 0px 3px;
+  width: 700px;
+  margin: 100px;
+  margin-bottom: 10px;
 }
 
 .box1{
     border: 1px solid #ccc;
     padding: 10px;
-    width: 1500px;
+    width: 700px;
     box-shadow: black 0px 0px 3px;
+    margin-top: 10px;
+    margin-left: 100px;
 }
+
 .btn-container {
     display: flex;
     justify-content: space-between;
@@ -83,6 +97,9 @@ input[type="range"] {
     transform: scale(2);
 }
 
+.controls{
+    margin-left: 100px;
+}
 
 button {
 background-color: blue;
@@ -113,4 +130,39 @@ background-color: #007bff;
 
 .input-box{
     width:200px;
+}
+
+.upload{
+    display: block;
+    margin-left: 100px;
+}
+
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 30px;
+    }
+    
+    .column {
+        flex: 100%;
+        padding: 10px;
+    }
+    
+    #plot1, #plot2 {
+        width: 100%;
+        margin: 0px;
+    }
+    
+    .box1 {
+        width: 100%;
+        margin: 20px;
+    }
+    
+    .controls {
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
+
+    .plot-container {
+        flex-direction: column;
+    }
 }

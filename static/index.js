@@ -197,7 +197,7 @@ function importSignal() {
                 }
 
         Plotly.relayout(plotDiv, { xaxis: { range: [Time[Math.max(0, i - 100)], Time[i]] }});
-            }, cinespeed-50);
+            }, cinespeed);
 
             if(linked) //play sig2
             {
@@ -254,7 +254,7 @@ function importSignal() {
                 }
 
         Plotly.relayout(plotDiv, { xaxis: { range: [Time[Math.max(0, i - 100)], Time[i]] }});
-            }, cinespeed-50);
+            }, cinespeed);
 
             }
             
@@ -445,7 +445,7 @@ function importSignal2() {
                 }
 
         Plotly.relayout(plotDiv2, { xaxis: { range: [Time2[Math.max(0, j - 100)], Time2[j]] }});
-            }, cinespeed2-50);
+            }, cinespeed2);
 
             
             if(linked) //play sig2
@@ -504,7 +504,7 @@ function importSignal2() {
                 }
 -
         Plotly.relayout(plotDiv2, { xaxis: { range: [Time2[Math.max(0, j - 100)], Time2[j]] }});
-            }, cinespeed2-50);
+            }, cinespeed2);
 
             }
 

@@ -122,10 +122,10 @@ background-color: #0056b3;
 
 input[type="color"] {
 height: 30px;
-width: 30px;
-border: none;
-border-radius: 50%;
-background-color: #007bff;
+width: 50px;
+border-radius: 1px;
+border-color: white;
+padding: 1px;
 cursor: pointer;
 }
 

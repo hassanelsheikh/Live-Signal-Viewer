@@ -2,7 +2,7 @@
  In this project, we managed to make a live signal viewer that animates the signl in real time and apply somme changes to it like color, speed, view statistics, Link the two plots to view them in the same time frame 
 
 
-ScreenShots
+#ScreenShots
 
 Initial page
 ![image](https://user-images.githubusercontent.com/101064451/227806900-9714cad1-7745-4d9e-a428-2e2905e6bcc0.png)

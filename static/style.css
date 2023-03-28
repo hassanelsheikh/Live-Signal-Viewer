@@ -9,12 +9,6 @@ h1{
     font-size: 50px;
 }
 
-h3{
-    display: flex;
-    justify-content: center;
-    color: #007bff;
-}
-
 .row {
     display: flex;
     justify-content: center;
@@ -39,6 +33,7 @@ input[type="file"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 30px;
   }
 
 #plot1, #plot2 {
@@ -156,6 +151,8 @@ background-color: #0056b3;
     cursor: pointer;
     border: none;
     width: 200px;
+    display: flex;
+    justify-content: center;
   }
   
   .file-upload-button:hover {

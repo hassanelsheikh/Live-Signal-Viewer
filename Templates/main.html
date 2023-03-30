@@ -43,7 +43,7 @@
                 <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
                 <label for="rewind" id="rewind_lbl1">Auto Rewind</label>
                 <input type="checkbox" id="rewind"><br><br>
-                <button id="stats" onclick="pdf()">Download statistics file</button><br><br>
+               
                 <div class="input-box"><input type="text" id ="label1" > </div>
                 <button type="button" id="lab" onclick="getlabel()">Add label</button>
             </div>
@@ -70,18 +70,27 @@
                 <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed2">
                 <label for="rewind2" id="rewind_lbl2">Auto Rewind</label>
                 <input type="checkbox" id="rewind2"><br><br>
-                <button id="stats2" onclick="pdf2()">Download statistics file</button><br><br>
                 <div class="input-box"> <input type="text" id ="label2" > </div>
                 <button type="button" id="lab2" onclick="getlabel2()">Add label</button>
             </div>
                 
             </div>
+            
     </div>
     </div>
     </div>
 
-    <label for="link" id="link_lbl">Link</label>
-    <input type="checkbox" id="link">
+
+   
+    
+
+    <div class="">
+        <label for="link" id="link_lbl">Link</label>
+        <input type="checkbox" id="link"><br>
+    
+        <button id="stats" onclick="pdf()">Download statistics file</button>
+    </div>
+   
     
     <script src="../static/index.js"> </script>
 </body>

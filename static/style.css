@@ -146,17 +146,23 @@ background-color: #0056b3;
   .file-upload-button {
     background-color: #007bff;
     color: #fff;
-    padding: 5px 10px;
-    border-radius: 3px;
+    padding: 10px 20px;
+    border-radius: 4px;
     cursor: pointer;
     border: none;
-    width: 200px;
+    width: 150px;
     display: flex;
     justify-content: center;
   }
   
   .file-upload-button:hover {
     background-color: #0056b3;
+  }
+
+  #stats{
+    display: block;
+    margin: 0 auto;
+
   }
 
 @media screen and (max-width: 768px) {
@@ -187,6 +193,12 @@ background-color: #0056b3;
     .plot-container {
         flex-direction: column;
     }
+
+
+
+
+
+
 
 
 }

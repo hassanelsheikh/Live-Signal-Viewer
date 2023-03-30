@@ -89,7 +89,6 @@ document.getElementById('Show/Hide2').style.display = 'none';
 document.getElementById('rewind2').style.display = 'none';
 document.getElementById('rewind_lbl2').style.display = 'none';
 document.getElementById('show_lbl2').style.display = 'none';
-document.getElementById('stats2').style.display = 'none';
 document.getElementById('label2').style.display = 'none';
 document.getElementById('lab2').style.display = 'none';
 
@@ -163,7 +162,7 @@ function importSignal() {
         document.getElementById('rewind').style.display = 'inline';
         document.getElementById('rewind_lbl1').style.display = 'inline';
         document.getElementById('show_lbl1').style.display = 'inline';
-        document.getElementById('stats').style.display = 'inline';
+        document.getElementById('stats').style.display = 'block';
         document.getElementById('label1').style.display = 'inline';
         document.getElementById('lab').style.display = 'inline';
 
@@ -411,7 +410,6 @@ function importSignal2() {
         document.getElementById('rewind2').style.display = 'inline';
         document.getElementById('rewind_lbl2').style.display = 'inline';
         document.getElementById('show_lbl2').style.display = 'inline';
-        document.getElementById('stats2').style.display = 'inline';
         document.getElementById('label2').style.display = 'inline';
         document.getElementById('lab2').style.display = 'inline';
 

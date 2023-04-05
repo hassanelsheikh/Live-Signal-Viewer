@@ -156,7 +156,7 @@ function importSignal() {
         
         // Define the play button
         const playBtn = document.getElementById('playBtn');
-        playBtn.style.display = 'inline';
+        //playBtn.style.display = 'inline';
 
         document.getElementById('Show/Hide').style.display = 'inline';
         document.getElementById('rewind').style.display = 'inline';
@@ -173,6 +173,8 @@ function importSignal() {
             //if playAnim is false then change to true and execute play
             if(!playAnim)
             {
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline';
                 playAnim = true;
                 interval = setInterval(() => {
                 trace1.x.push(Time[i]);
@@ -215,10 +217,14 @@ function importSignal() {
             if(playAnim)
             {
                 playAnim = false;
+                playBtn.style.display = 'inline';
+                pauseBtn.style.display = 'none';
                 clearInterval(interval);
 
                 if(linked)
                 {
+                    pauseBtn2.style.display = 'none';
+                    playBtn2.style.display = 'inline';
                     playAnim2 = false;
                     clearInterval(interval2);
                 }
@@ -403,7 +409,7 @@ function importSignal2() {
         
         // Define the play button
         const playBtn2 = document.getElementById('playBtn2');
-        playBtn2.style.display = 'inline';
+        //playBtn2.style.display = 'inline';
 
         
         document.getElementById('Show/Hide2').style.display = 'inline';
@@ -420,6 +426,8 @@ function importSignal2() {
             //if playAnim is false then change to true and execute play
             if(!playAnim2)
             {
+                playBtn2.style.display = 'none';
+                pauseBtn2.style.display = 'inline';
                 playAnim2 = true;
                 interval2 = setInterval(() => {
                 trace2.x.push(Time2[j]);
@@ -462,11 +470,15 @@ function importSignal2() {
         pauseBtn2.addEventListener('click', function() {
             if(playAnim2)
             {
+                pauseBtn2.style.display = 'none';
+                playBtn2.style.display = 'inline';
                 playAnim2 = false;
                 clearInterval(interval2);
 
                 if(linked)
                 {
+                    pauseBtn.style.display = 'none';
+                    playBtn.style.display = 'inline';
                     playAnim = false;
                     clearInterval(interval);
                 }
